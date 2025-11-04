@@ -7,7 +7,8 @@ const Marriage = () => {
     { label: "Groom Side Package - Rs85,000", value: "groom", price: 85000 },
     { label: "Both Side Package - Rs120,000", value: "both", price: 120000 },
     {
-      label: "Premium Package - Short Distance Rs1,35,000 / Long Distance",
+      label:
+        "Premium Package - Short Distance Rs1,35,000 / Long Distance Rs1,45,000",
       value: "premium",
       price: 135000,
     },
@@ -28,54 +29,68 @@ const Marriage = () => {
     },
   ];
 
-  const [packages, setPackages] = useState([{ id: 1, value: "" }]);
+  const [packages, setPackages] = useState([
+    { id: 1, value: "", distance: "" },
+  ]);
   const [formData, setFormData] = useState({});
   const [showPrint, setShowPrint] = useState(false);
 
-  // Show respective event sections based on package type
   const showHaldi = (pkg) =>
     ["bride", "both", "premium", "haldi"].includes(pkg);
   const showMarriage = (pkg) =>
     ["bride", "groom", "both", "premium", "marriage"].includes(pkg);
   const showReception = (pkg) =>
     ["groom", "both", "premium", "reception"].includes(pkg);
-  const showPreWedding = (pkg) =>
-    ["premium", "preWedding"].includes(pkg);
-  const showPostWedding = (pkg) =>
-    ["both", "postWedding"].includes(pkg);
+  const showPreWedding = (pkg) => ["premium", "preWedding"].includes(pkg);
+  const showPostWedding = (pkg) => ["both", "postWedding"].includes(pkg);
 
-  // Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Package selection management
   const handlePackageChange = (e, id) => {
     const value = e.target.value;
     setPackages((prev) =>
-      prev.map((pkg) => (pkg.id === id ? { ...pkg, value } : pkg))
+      prev.map((pkg) => (pkg.id === id ? { ...pkg, value, distance: "" } : pkg))
+    );
+  };
+
+  const handleDistanceChange = (id, distance) => {
+    setPackages((prev) =>
+      prev.map((pkg) => (pkg.id === id ? { ...pkg, distance } : pkg))
     );
   };
 
   const addPackage = () => {
-    const nextId = packages.length > 0 ? packages[packages.length - 1].id + 1 : 1;
-    setPackages([...packages, { id: nextId, value: "" }]);
+    const nextId =
+      packages.length > 0 ? packages[packages.length - 1].id + 1 : 1;
+    setPackages([...packages, { id: nextId, value: "", distance: "" }]);
   };
 
   const removePackage = (id) => {
     setPackages(packages.filter((pkg) => pkg.id !== id));
   };
 
-  // Calculate total price
   const calculateTotal = () => {
     return packages.reduce((total, pkg) => {
       const selected = packageOptions.find((o) => o.value === pkg.value);
-      return selected ? total + selected.price : total;
+      if (!selected) return total;
+
+      let price = selected.price;
+
+      if (pkg.value === "preWedding") {
+        price = pkg.distance === "long" ? 30000 : 15000;
+      } else if (pkg.value === "postWedding") {
+        price = pkg.distance === "long" ? 50000 : 25000;
+      } else if (pkg.value === "premium") {
+        price = pkg.distance === "long" ? 145000 : 135000;
+      }
+
+      return total + price;
     }, 0);
   };
 
-  // Print function
   const handlePrint = () => {
     setShowPrint(true);
     setTimeout(() => {
@@ -85,15 +100,23 @@ const Marriage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6 flex justify-center">
-      <div className="w-full max-w-5xl bg-white shadow-lg rounded-xl p-8">
-        <h1 className="text-3xl font-bold mb-6 text-gray-800">
-          Marriage Event Form
-        </h1>
-
+    <div
+      className={
+        showPrint
+          ? "min-h-screen p-0"
+          : "min-h-screen bg-gray-50 p-6 flex justify-center"
+      }
+    >
+      <div
+        className={
+          showPrint
+            ? "w-full"
+            : "w-full max-w-5xl bg-white shadow-lg rounded-xl p-8"
+        }
+      >
         {!showPrint && (
           <>
-            {/* Client Info */}
+            <h2 className="font-semibold text-lg mb-2">Client Details</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
               <input
                 type="text"
@@ -121,7 +144,7 @@ const Marriage = () => {
               />
             </div>
 
-            {/* Package Selection */}
+            <h2 className="font-semibold text-lg mb-2">Package Details</h2>
             {packages.map((pkg) => (
               <div
                 key={pkg.id}
@@ -160,7 +183,38 @@ const Marriage = () => {
                     ))}
                 </select>
 
-                {/* Dynamic Sections */}
+                {(pkg.value === "preWedding" ||
+                  pkg.value === "postWedding" ||
+                  pkg.value === "premium") && (
+                  <div className="mt-4">
+                    <label className="font-semibold text-sm block mb-2">
+                      Select Distance
+                    </label>
+                    <div className="flex gap-6">
+                      <label className="flex items-center gap-2">
+                        <input
+                          type="radio"
+                          name={`distance-${pkg.id}`}
+                          value="short"
+                          checked={pkg.distance === "short"}
+                          onChange={() => handleDistanceChange(pkg.id, "short")}
+                        />
+                        Short Distance
+                      </label>
+                      <label className="flex items-center gap-2">
+                        <input
+                          type="radio"
+                          name={`distance-${pkg.id}`}
+                          value="long"
+                          checked={pkg.distance === "long"}
+                          onChange={() => handleDistanceChange(pkg.id, "long")}
+                        />
+                        Long Distance
+                      </label>
+                    </div>
+                  </div>
+                )}
+
                 <div className="mt-6 space-y-6">
                   {showHaldi(pkg.value) && (
                     <div>
@@ -279,7 +333,9 @@ const Marriage = () => {
                           type="text"
                           name={`postWeddingLocation-${pkg.id}`}
                           placeholder="Location"
-                          value={formData[`postWeddingLocation-${pkg.id}`] || ""}
+                          value={
+                            formData[`postWeddingLocation-${pkg.id}`] || ""
+                          }
                           onChange={handleChange}
                           className="border p-2 rounded-lg w-1/2 focus:ring-2 focus:ring-indigo-400"
                         />
@@ -300,7 +356,7 @@ const Marriage = () => {
               </button>
             )}
 
-            {/* Payment */}
+            <h2 className="font-semibold text-lg mb-2">Payment Details</h2>
             <div className="flex gap-4 mb-6">
               <input
                 type="number"
@@ -320,7 +376,7 @@ const Marriage = () => {
               />
             </div>
 
-            {/* Prepared By */}
+            <h2 className="font-semibold text-lg mb-2">Prepared By</h2>
             <div className="flex gap-4 mb-6">
               <input
                 type="text"
@@ -340,7 +396,6 @@ const Marriage = () => {
               />
             </div>
 
-            {/* Notes & Date */}
             <textarea
               name="notes"
               placeholder="Additional Notes"
@@ -348,6 +403,8 @@ const Marriage = () => {
               onChange={handleChange}
               className="border p-3 rounded-lg w-full focus:ring-2 focus:ring-indigo-400 mb-6"
             />
+
+            <h2 className="font-semibold text-lg mb-2">Agreement Day</h2>
             <input
               type="date"
               name="agreementDate"

@@ -6,7 +6,7 @@ const Home = () => {
 
   const events = [
     { name: "Marriage", link: "/marriage", color: "from-pink-500 to-rose-400" },
-    { name: "Event", link: "/event", color: "from-indigo-500 to-blue-400" },
+    { name: "Courier", link: "/courier", color: "from-indigo-500 to-blue-400" },
     { name: "Bartabanda", link: "/bartabanda", color: "from-amber-500 to-orange-400" },
   ];
 

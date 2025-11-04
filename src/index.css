@@ -1,20 +1,112 @@
-
-/* Import Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600&display=swap');
 @import "tailwindcss";
-/* Custom Font Families */
+
+/* Global font setup */
 :root {
   --font-heading: 'Poppins', sans-serif;
   --font-body: 'Inter', sans-serif;
 }
 
-/* Apply fonts globally */
 body {
   font-family: var(--font-body);
+  color: #111827;
+  background: #ffffff;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  margin: 0;
+  padding: 0;
 }
 
-/* Headings */
-h1, h2, h3, h4, h5, h6 {
+/* =========================================
+   A4 Layout - Print Ready (Portrait)
+========================================= */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 20mm 25mm;
+  }
+
+  body {
+    background: #fff;
+  }
+
+  .print-container {
+    width: 100%;
+    min-height: 100%;
+    margin: 0;
+    padding: 0;
+    box-shadow: none !important;
+    border: none !important;
+  }
+}
+
+/* =========================================
+   Screen Preview (A4 Simulated)
+========================================= */
+.print-container {
+  background: white;
+  width: 210mm; /* A4 width */
+  min-height: 297mm; /* A4 height */
+  margin: 10mm auto;
+  padding: 25mm;
+  box-sizing: border-box;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  border-radius: 0;
+}
+
+/* Title */
+.print-container h1 {
   font-family: var(--font-heading);
+  font-size: 22px;
+  font-weight: 700;
+  text-transform: uppercase;
+  text-align: center;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #000;
+  padding-bottom: 5px;
+}
+
+/* Section Headings */
+.print-container h2 {
+  font-family: var(--font-heading);
+  font-size: 16px;
+  font-weight: 600;
+  margin-top: 20px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 3px;
+}
+
+/* Text & Paragraphs */
+.print-container p {
+  margin-bottom: 0.75rem;
+  font-size: 13px;
+  text-align: justify;
+  line-height: 1.6;
+}
+
+/* Lists */
+.print-container ul {
+  margin-left: 20px;
+  margin-bottom: 15px;
+  list-style-type: disc;
+}
+
+/* Signature Section */
+.print-container .signature-section {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 50px;
+  font-size: 13px;
+}
+
+/* Footer */
+.print-container footer {
+  text-align: center;
+  font-size: 12px;
+  color: #6b7280;
+  border-top: 1px solid #d1d5db;
+  margin-top: 40px;
+  padding-top: 8px;
 }
