@@ -111,7 +111,7 @@ const CourierPrint = ({ billDetails, items, totalAmount }) => {
       </table>
 
       {/* Total in Words */}
-      <div className="text-sm mb-8">
+      <div className="text-sm mb-4">
         <p>
           <strong>Total Payable Amount: NPR {totalAmount.toFixed(2)}</strong> (
           <strong>{numberToWords(totalAmount)} only</strong>)
@@ -122,8 +122,7 @@ const CourierPrint = ({ billDetails, items, totalAmount }) => {
       <div className="text-center text-gray-800 text-sm">
         <p className="m-0">
           <strong>Authorized By:</strong> Nepal Leadership Technology Pvt. Ltd.
-        </p>
-        <p className="m-0">
+          <br />
           <strong>Processed Through:</strong> Sunshine Cargo
         </p>
       </div>
