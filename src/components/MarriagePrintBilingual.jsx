@@ -1,5 +1,3 @@
-import React from "react";
-import pic from "../assets/letterHead.png";
 import { toNepaliNumber } from "./utils/numberToNepali";
 
 const MarriagePrintNepali = ({
@@ -70,7 +68,7 @@ const MarriagePrintNepali = ({
 
       {/* Letterhead */}
       <div className="letterhead text-center mb-4">
-        <img src={pic} alt="Letterhead" className="mx-auto" />
+        <img src='https://i.imgur.com/8iwjKvz.png' alt="Letterhead" className="mx-auto" />
       </div>
 
       {/* Document Title */}

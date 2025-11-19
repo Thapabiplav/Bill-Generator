@@ -1,5 +1,4 @@
-import React from "react";
-import pic from "../../assets/letterHead.png";
+
 
 const AgreementPrint = ({
   clientName,
@@ -146,7 +145,7 @@ const AgreementPrint = ({
 
       {/* === Letterhead === */}
       <div className="letterhead text-center mb-4">
-        <img src={pic} alt="Letterhead" className="mx-auto" />
+        <img src='https://i.imgur.com/8iwjKvz.png' alt="Letterhead" className="mx-auto" />
       </div>
 
       {/* === Document Title === */}

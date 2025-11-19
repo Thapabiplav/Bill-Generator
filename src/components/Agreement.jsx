@@ -162,14 +162,15 @@ const Agreement = () => {
           <div className="relative bg-linear-to-r from-indigo-600 to-purple-600 p-6 flex justify-center items-center">
             <button
               onClick={handleBack}
-              className="absolute left-6 bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-lg backdrop-blur-md transition"
+              className="absolute left-0 top-2 sm:top-4 bg-indigo-100 text-indigo-700 px-4 py-2 rounded-lg font-medium hover:bg-indigo-200 transition"
             >
               ⬅ Back
             </button>
 
-            <h1 className="text-white text-2xl font-bold tracking-wide text-center">
+            <h1 className="text-3xl sm:text-4xl font-bold text-center text-white-700 mb-6 mt-6 sm:mt-8">
               Agreement Form
             </h1>
+
           </div>
 
           {/* Content */}

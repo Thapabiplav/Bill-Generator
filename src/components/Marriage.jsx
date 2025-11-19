@@ -180,20 +180,22 @@ const Marriage = () => {
         {!printType && (
           <>
             {/* Header */}
-            <div className="relative mb-8">
+            {/* Header */}
+            <div className="relative mb-8 pt-4 sm:pt-0">
               <button
                 onClick={handleBack}
-                className="absolute left-0 top-1 bg-indigo-100 text-indigo-700 px-4 py-2 rounded-lg font-medium hover:bg-indigo-200 transition"
+                className="absolute left-0 -top-4 sm:-top-2 bg-indigo-100 text-indigo-700 px-4 py-2 rounded-lg font-medium hover:bg-indigo-200 transition"
               >
                 ← Back
               </button>
-              <h1 className="text-3xl font-bold text-center text-indigo-700">
+              <h1 className="text-3xl font-bold text-center text-blue-700 mb-7 mt-4 sm:mt-0">
                 Marriage Event Agreement
               </h1>
               <p className="text-center text-gray-500 mt-1">
                 Fill in the client and package details to generate an agreement
               </p>
             </div>
+
 
             {/* Client Details */}
             <div className="bg-gray-50 p-6 rounded-2xl border border-gray-100 shadow-sm mb-8">
@@ -275,38 +277,38 @@ const Marriage = () => {
                   {(pkg.value === "preWedding" ||
                     pkg.value === "postWedding" ||
                     pkg.value === "premium") && (
-                    <div className="mt-4">
-                      <label className="font-medium text-gray-600 block mb-2">
-                        Select Distance
-                      </label>
-                      <div className="flex gap-6 text-gray-700">
-                        <label className="flex items-center gap-2">
-                          <input
-                            type="radio"
-                            name={`distance-${pkg.id}`}
-                            value="short"
-                            checked={pkg.distance === "short"}
-                            onChange={() =>
-                              handleDistanceChange(pkg.id, "short")
-                            }
-                          />
-                          Short Distance
+                      <div className="mt-4">
+                        <label className="font-medium text-gray-600 block mb-2">
+                          Select Distance
                         </label>
-                        <label className="flex items-center gap-2">
-                          <input
-                            type="radio"
-                            name={`distance-${pkg.id}`}
-                            value="long"
-                            checked={pkg.distance === "long"}
-                            onChange={() =>
-                              handleDistanceChange(pkg.id, "long")
-                            }
-                          />
-                          Long Distance
-                        </label>
+                        <div className="flex gap-6 text-gray-700">
+                          <label className="flex items-center gap-2">
+                            <input
+                              type="radio"
+                              name={`distance-${pkg.id}`}
+                              value="short"
+                              checked={pkg.distance === "short"}
+                              onChange={() =>
+                                handleDistanceChange(pkg.id, "short")
+                              }
+                            />
+                            Short Distance
+                          </label>
+                          <label className="flex items-center gap-2">
+                            <input
+                              type="radio"
+                              name={`distance-${pkg.id}`}
+                              value="long"
+                              checked={pkg.distance === "long"}
+                              onChange={() =>
+                                handleDistanceChange(pkg.id, "long")
+                              }
+                            />
+                            Long Distance
+                          </label>
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    )}
 
                   {/* Dynamic Events */}
                   <div className="mt-4 space-y-4">
@@ -358,20 +360,21 @@ const Marriage = () => {
               )}
             </div>
 
-            {/* Payment + Prepared By */}
-            <div className="bg-gray-50 p-6 rounded-2xl border border-gray-100 shadow-sm mb-8">
-              <h2 className="text-lg font-semibold text-indigo-700 mb-4 border-b pb-2">
+            {/* Payment & Prepared By */}
+            <div className="bg-gray-50 p-4 sm:p-6 rounded-2xl border border-gray-100 shadow-sm mb-6 sm:mb-8">
+              <h2 className="text-lg sm:text-xl font-semibold text-indigo-700 mb-4 border-b pb-2">
                 Payment & Prepared By
               </h2>
 
-              <div className="grid sm:grid-cols-2 gap-4 mb-4">
+              {/* Payments */}
+              <div className="flex flex-col sm:flex-row sm:space-x-4 mb-4">
                 <input
                   type="number"
                   name="advancePayment"
                   placeholder="Advance Payment"
                   value={formData.advancePayment || ""}
                   onChange={handleChange}
-                  className="border border-gray-300 rounded-xl p-3 focus:ring-2 focus:ring-indigo-400 focus:outline-none"
+                  className="border border-gray-300 rounded-xl p-2 sm:p-3 w-full mb-3 sm:mb-0 focus:ring-2 focus:ring-indigo-400 focus:outline-none"
                 />
                 <input
                   type="text"
@@ -379,18 +382,19 @@ const Marriage = () => {
                   placeholder="Payment Method"
                   value={formData.paymentMethod || ""}
                   onChange={handleChange}
-                  className="border border-gray-300 rounded-xl p-3 focus:ring-2 focus:ring-indigo-400 focus:outline-none"
+                  className="border border-gray-300 rounded-xl p-2 sm:p-3 w-full focus:ring-2 focus:ring-indigo-400 focus:outline-none"
                 />
               </div>
 
-              <div className="grid sm:grid-cols-2 gap-4 mb-4">
+              {/* Prepared By */}
+              <div className="flex flex-col sm:flex-row sm:space-x-4 mb-4">
                 <input
                   type="text"
                   name="personName"
                   placeholder="Prepared By - Name"
                   value={formData.personName || ""}
                   onChange={handleChange}
-                  className="border border-gray-300 rounded-xl p-3 focus:ring-2 focus:ring-indigo-400 focus:outline-none"
+                  className="border border-gray-300 rounded-xl p-2 sm:p-3 w-full mb-3 sm:mb-0 focus:ring-2 focus:ring-indigo-400 focus:outline-none"
                 />
                 <input
                   type="text"
@@ -398,20 +402,22 @@ const Marriage = () => {
                   placeholder="Prepared By - Post"
                   value={formData.personPost || ""}
                   onChange={handleChange}
-                  className="border border-gray-300 rounded-xl p-3 focus:ring-2 focus:ring-indigo-400 focus:outline-none"
+                  className="border border-gray-300 rounded-xl p-2 sm:p-3 w-full focus:ring-2 focus:ring-indigo-400 focus:outline-none"
                 />
               </div>
 
+              {/* Notes */}
               <textarea
                 name="notes"
                 placeholder="Additional Notes"
                 value={formData.notes || ""}
                 onChange={handleChange}
-                className="border border-gray-300 rounded-xl p-3 w-full focus:ring-2 focus:ring-indigo-400 focus:outline-none mb-4"
+                className="border border-gray-300 rounded-xl p-2 sm:p-3 w-full focus:ring-2 focus:ring-indigo-400 focus:outline-none mb-4"
               />
 
-              <div>
-                <label className="block text-gray-600 font-medium mb-2">
+              {/* Agreement Date */}
+              <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4">
+                <label className="text-gray-600 font-medium mb-1 sm:mb-0">
                   Agreement Date
                 </label>
                 <input
@@ -419,10 +425,11 @@ const Marriage = () => {
                   name="agreementDate"
                   value={formData.agreementDate || ""}
                   onChange={handleChange}
-                  className="border border-gray-300 rounded-xl p-3 w-1/2 focus:ring-2 focus:ring-indigo-400 focus:outline-none"
+                  className="border border-gray-300 rounded-xl p-2 sm:p-3 w-full sm:w-auto focus:ring-2 focus:ring-indigo-400 focus:outline-none"
                 />
               </div>
             </div>
+
 
             {/* Print Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 mt-6">

@@ -1,6 +1,6 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import CourierPrint from '../components/Print/CourierPrint';
+import CourierPrint from "../components/Print/CourierPrint";
 
 const Courier = () => {
   const navigate = useNavigate();
@@ -10,13 +10,14 @@ const Courier = () => {
     billNo: "",
     date: "",
     customerName: "",
+    country: "",
   });
 
   const [items, setItems] = useState([
     { description: "", rate: "", quantity: "", amount: "" },
   ]);
 
-  const [showPrint, setShowPrint] = useState(false); // NEW: print state
+  const [showPrint, setShowPrint] = useState(false);
 
   const handleBillChange = (field, value) => {
     setBillDetails({ ...billDetails, [field]: value });
@@ -27,12 +28,13 @@ const Courier = () => {
     updatedItems[index][field] = value;
 
     const rate = parseFloat(updatedItems[index].rate) || 0;
-    const quantity = parseFloat(updatedItems[index].quantity) || 0;
+    const qty = parseFloat(updatedItems[index].quantity) || 0;
 
-    // Auto-calculate amount if rate & quantity are both provided
     if (field === "rate" || field === "quantity") {
-      if (rate > 0 && quantity > 0) {
-        updatedItems[index].amount = rate * quantity;
+      if (rate > 0 && qty > 0) {
+        updatedItems[index].amount = (rate * qty).toFixed(2);
+      } else {
+        updatedItems[index].amount = "";
       }
     }
 
@@ -44,8 +46,7 @@ const Courier = () => {
   };
 
   const removeRow = (index) => {
-    const updatedItems = items.filter((_, i) => i !== index);
-    setItems(updatedItems);
+    setItems(items.filter((_, i) => i !== index));
   };
 
   const totalAmount = items.reduce(
@@ -53,7 +54,6 @@ const Courier = () => {
     0
   );
 
-  // UPDATED: print handler (same-page)
   const handlePrint = () => {
     setShowPrint(true);
     setTimeout(() => {
@@ -63,128 +63,166 @@ const Courier = () => {
   };
 
   return (
-    <div className={showPrint ? "min-h-screen p-0" : "min-h-screen bg-linear-to-br from-gray-50 to-gray-100 p-6"}>
-      <div className={showPrint ? "w-full" : "max-w-5xl mx-auto bg-white rounded-2xl shadow-md border border-gray-200 p-8 relative"}>
-
+    <div
+      className={
+        showPrint
+          ? "min-h-screen p-0"
+          : "min-h-screen bg-linear-to-br from-gray-50 to-gray-100 p-6"
+      }
+    >
+      <div
+        className={
+          showPrint
+            ? "w-full"
+            : "max-w-5xl mx-auto bg-white rounded-2xl shadow-md border border-gray-200 p-8 relative"
+        }
+      >
         {!showPrint && (
           <>
-            {/* ===== BACK BUTTON ===== */}
+            {/* Back Button */}
             <button
               onClick={() => navigate("/")}
-              className="absolute top-6 left-6 bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-1.5 rounded-lg text-sm font-medium flex items-center gap-2 transition"
+              className="absolute top-6 left-6 bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-1.5 rounded-lg text-sm z-10"
             >
               ← Back
             </button>
 
-            {/* ===== PAGE TITLE ===== */}
-            <h1 className="text-3xl font-bold text-center text-blue-700 mb-8 tracking-wide">
+            {/* Title */}
+            <h1 className="text-3xl font-bold text-center text-blue-700 mb-8 mt-12 sm:mt-0">
               🧾 Courier Billing System
             </h1>
 
-            {/* ===== BILL DETAILS ===== */}
-            <div className="grid md:grid-cols-3 sm:grid-cols-2 gap-6 mb-8">
+            {/* BILL DETAILS */}
+            <div className="grid md:grid-cols-4 sm:grid-cols-2 gap-6 mb-8">
               <div>
-                <label className="block text-gray-700 font-semibold mb-1">
-                  Bill No:
-                </label>
+                <label className="block font-semibold">Bill No:</label>
                 <input
                   type="text"
                   value={billDetails.billNo}
                   onChange={(e) => handleBillChange("billNo", e.target.value)}
-                  placeholder="Enter Bill No"
-                  className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  className="w-full border rounded-lg p-2"
                 />
               </div>
 
               <div>
-                <label className="block text-gray-700 font-semibold mb-1">Date:</label>
+                <label className="block font-semibold">Date:</label>
                 <input
                   type="date"
                   value={billDetails.date}
                   onChange={(e) => handleBillChange("date", e.target.value)}
-                  className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  className="w-full border rounded-lg p-2"
                 />
               </div>
 
               <div>
-                <label className="block text-gray-700 font-semibold mb-1">
-                  Customer Name:
-                </label>
+                <label className="block font-semibold">Customer Name:</label>
                 <input
                   type="text"
                   value={billDetails.customerName}
-                  onChange={(e) => handleBillChange("customerName", e.target.value)}
-                  placeholder="Enter Customer Name"
-                  className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  onChange={(e) =>
+                    handleBillChange("customerName", e.target.value)
+                  }
+                  className="w-full border rounded-lg p-2"
+                />
+              </div>
+
+              <div>
+                <label className="block font-semibold">Country:</label>
+                <input
+                  type="text"
+                  value={billDetails.country}
+                  onChange={(e) => handleBillChange("country", e.target.value)}
+                  className="w-full border rounded-lg p-2"
+                  placeholder="Enter Country"
                 />
               </div>
             </div>
 
-            {/* ===== TABLE ===== */}
+            {/* RESPONSIVE TABLE */}
             <div className="overflow-x-auto mb-6">
-              <table className="w-full border border-gray-200 rounded-lg text-sm shadow-sm">
-                <thead className="bg-blue-100 text-blue-700 uppercase text-sm">
+              <table className="w-full border border-gray-200 rounded-lg text-sm shadow-sm min-w-[220px] sm:min-w-full">
+                <thead className="bg-blue-100 text-blue-700 uppercase text-sm hidden sm:table-header-group">
                   <tr>
-                    <th className="border p-3 text-left">Description</th>
-                    <th className="border p-3 text-center">Rate (NPR)</th>
-                    <th className="border p-3 text-center">Quantity (Kg)</th>
-                    <th className="border p-3 text-center">Amount (NPR)</th>
-                    <th className="border p-3 text-center">Action</th>
+                    <th className="border p-2 text-center">Description</th>
+                    <th className="border p-2 text-center">Rate (NPR)</th>
+                    <th className="border p-2 text-center">Quantity (Kg)</th>
+                    <th className="border p-2 text-center">Amount (NPR)</th>
+                    <th className="border p-2 text-center">Action</th>
                   </tr>
                 </thead>
+
                 <tbody>
                   {items.map((item, index) => (
                     <tr
                       key={index}
-                      className={`hover:bg-blue-50 ${index % 2 === 0 ? "bg-white" : "bg-gray-50"}`}
+                      className="block sm:table-row mb-3 sm:mb-0 border sm:border-0 rounded-lg sm:rounded-none overflow-hidden"
                     >
-                      <td className="border p-2">
+                      {/* Description */}
+                      <td className="block sm:table-cell p-2 sm:p-2">
+                        <label className="sm:hidden font-semibold block mb-1">
+                          Description:
+                        </label>
                         <input
                           type="text"
                           value={item.description}
                           onChange={(e) =>
                             handleChange(index, "description", e.target.value)
                           }
-                          placeholder="Enter description"
-                          className="w-full border rounded p-1 focus:ring-1 focus:ring-blue-400"
+                          className="w-full border rounded p-1 text-sm sm:text-base"
                         />
                       </td>
-                      <td className="border p-2 text-center">
+
+                      {/* Rate */}
+                      <td className="block sm:table-cell p-2 sm:p-2">
+                        <label className="sm:hidden font-semibold block mb-1">
+                          Rate (NPR):
+                        </label>
                         <input
                           type="number"
                           value={item.rate}
-                          onChange={(e) => handleChange(index, "rate", e.target.value)}
-                          placeholder="Rate"
-                          className="w-full border rounded p-1 text-center focus:ring-1 focus:ring-blue-400"
+                          onChange={(e) =>
+                            handleChange(index, "rate", e.target.value)
+                          }
+                          className="w-full border rounded p-1 text-sm sm:text-base text-center"
                         />
                       </td>
-                      <td className="border p-2 text-center">
+
+                      {/* Quantity */}
+                      <td className="block sm:table-cell p-2 sm:p-2">
+                        <label className="sm:hidden font-semibold block mb-1">
+                          Quantity (Kg):
+                        </label>
                         <input
                           type="number"
                           value={item.quantity}
                           onChange={(e) =>
                             handleChange(index, "quantity", e.target.value)
                           }
-                          placeholder="Qty (Kg)"
-                          className="w-full border rounded p-1 text-center focus:ring-1 focus:ring-blue-400"
+                          className="w-full border rounded p-1 text-sm sm:text-base text-center"
                         />
                       </td>
-                      <td className="border p-2 text-center">
+
+                      {/* Amount */}
+                      <td className="block sm:table-cell p-2 sm:p-2">
+                        <label className="sm:hidden font-semibold block mb-1">
+                          Amount (NPR):
+                        </label>
                         <input
                           type="number"
                           value={item.amount}
                           onChange={(e) =>
                             handleChange(index, "amount", e.target.value)
                           }
-                          placeholder="Amount"
-                          className="w-full border rounded p-1 text-center font-semibold focus:ring-1 focus:ring-blue-400"
+                          className="w-full border rounded p-1 text-sm sm:text-base text-center"
                         />
                       </td>
-                      <td className="border p-2 text-center">
+
+                      {/* Action */}
+                      <td className="block sm:table-cell p-2 sm:p-2 text-right">
                         {index > 0 && (
                           <button
                             onClick={() => removeRow(index)}
-                            className="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600 transition"
+                            className="bg-red-500 text-white px-3 py-1 rounded text-xs sm:text-sm"
                           >
                             ✕
                           </button>
@@ -196,41 +234,33 @@ const Courier = () => {
               </table>
             </div>
 
-            {/* ===== ACTIONS & TOTAL ===== */}
-            <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <div className="flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-0">
               <div className="flex gap-3">
                 <button
                   onClick={addRow}
-                  className="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition font-medium shadow-sm"
+                  className="bg-blue-600 text-white px-5 py-2 rounded-lg"
                 >
                   + Add Item
                 </button>
+
                 <button
                   onClick={handlePrint}
-                  className="bg-green-600 text-white px-5 py-2 rounded-lg hover:bg-green-700 transition font-medium shadow-sm"
+                  className="bg-green-600 text-white px-5 py-2 rounded-lg"
                 >
                   🖨️ Print Bill
                 </button>
               </div>
 
-              <div className="text-xl font-bold text-gray-800">
+              <div className="text-xl font-bold">
                 Total:{" "}
-                <span className="text-green-600">
+                <span className="text-green-700">
                   NPR {totalAmount.toFixed(2)}
                 </span>
               </div>
             </div>
-
-            {/* ===== FOOTER ===== */}
-            <div className="mt-10 border-t pt-4 text-center text-gray-500 text-sm">
-              <p>Nepal Leadership Technology Pvt. Ltd.</p>
-              <p>Address: Kamalamai-5, Sindhuli, Nepal</p>
-              <p className="italic mt-1">Processed Through: Sunshine Cargo</p>
-            </div>
           </>
         )}
 
-        {/* ===== PRINT VIEW ===== */}
         {showPrint && (
           <div ref={printRef}>
             <CourierPrint
